@@ -7,11 +7,10 @@ import * as XLSX from "xlsx";
 
 function Reports() {
   const [reportData, setReportData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]); // datos filtrados para mostrar
+  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados para filtros
   const [filters, setFilters] = useState({
     region: "",
     dateFrom: "",
@@ -37,14 +36,14 @@ function Reports() {
             Authorization: `Bearer ${token}`,
           },
         });
-
         if (!response.ok) {
           throw new Error(`Error al obtener reportes: ${response.status}`);
         }
 
         const data = await response.json();
+        console.log("Datos de reportes:", data);
         setReportData(data);
-        setFilteredData(data); // inicial con todos los datos
+        setFilteredData(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -55,7 +54,6 @@ function Reports() {
     fetchReports();
   }, []);
 
-  // Manejo cambios en filtros
   const handleFilterChange = (e) => {
     const { id, value } = e.target;
     setFilters((prev) => ({
@@ -64,7 +62,6 @@ function Reports() {
     }));
   };
 
-  // Filtrar datos al hacer clic en Buscar
   const handleSearch = () => {
     let filtered = [...reportData];
 
@@ -108,16 +105,13 @@ function Reports() {
 
     if (filters.farm) {
       filtered = filtered.filter((item) =>
-        (item.finca || "")
-          .toLowerCase()
-          .includes(filters.farm.toLowerCase())
+        (item.finca || "").toLowerCase().includes(filters.farm.toLowerCase())
       );
     }
 
     setFilteredData(filtered);
   };
 
-  // Limpiar filtros y mostrar todos
   const handleClearFilters = () => {
     setFilters({
       region: "",
@@ -141,8 +135,8 @@ function Reports() {
       Finca: item.finca,
       Ubicación: item.location || item.ubicacion,
       Fecha: item.date || item.fecha,
-      Lote: item.vaccineBatch || item.lote_vacuna,
-      "Tipo Vacuna": item.vaccineType || item.tipo_vacuna,
+      Lote: item.lote_vacuna || item.loteVacuna || item.vaccineBatch,
+      Tipo_Vacuna: item.tipo_vacuna || item.tipoVacuna || item.vaccineType,
       Observaciones: item.observations || item.observaciones,
       Vacunado: item.vacunado ? "Sí" : "No",
     }));
@@ -167,14 +161,14 @@ function Reports() {
       item.finca,
       item.location || item.ubicacion,
       item.date || item.fecha,
-      item.vaccineBatch || item.loteVacuna,
-      item.vaccineType || item.tipoVacuna,
+      item.lote_vacuna || item.loteVacuna || item.vaccineBatch,
+      item.tipo_vacuna || item.tipoVacuna || item.vaccineType,
       item.observations || item.observaciones,
       item.vacunado ? "Sí" : "No",
     ]);
 
     autoTable(doc, {
-      head: [["Nombre", "Finca", "Ubicación", "Fecha", "Lote", "Tipo Vacuna", "Observaciones", "Vacunado"]],
+      head: [["Nombre", "Finca", "Ubicación", "Fecha", "Lote", "Tipo_Vacuna", "Observaciones", "Vacunado"]],
       body: rows,
       startY: 20,
     });
@@ -314,8 +308,8 @@ function Reports() {
                         <td>{record.finca}</td>
                         <td>{record.location || record.ubicacion}</td>
                         <td>{record.date || record.fecha}</td>
-                        <td>{record.vaccineBatch || record.loteVacuna}</td>
-                        <td>{record.vaccineType || record.tipoVacuna}</td>
+                        <td>{record.lote_vacuna || record.loteVacuna || record.vaccineBatch}</td>
+                        <td>{record.tipo_vacuna || record.tipoVacuna || record.vaccineType}</td>
                         <td>{record.observations || record.observaciones}</td>
                         <td>
                           <span
