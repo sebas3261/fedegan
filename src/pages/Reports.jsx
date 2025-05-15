@@ -141,8 +141,8 @@ function Reports() {
       Finca: item.finca,
       Ubicación: item.location || item.ubicacion,
       Fecha: item.date || item.fecha,
-      Lote: item.vaccineBatch || item.loteVacuna,
-      "Tipo Vacuna": item.vaccineType || item.tipoVacuna,
+      Lote: item.vaccineBatch || item.lote_vacuna,
+      "Tipo Vacuna": item.vaccineType || item.tipo_vacuna,
       Observaciones: item.observations || item.observaciones,
       Vacunado: item.vacunado ? "Sí" : "No",
     }));
