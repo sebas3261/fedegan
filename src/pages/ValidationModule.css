@@ -1,0 +1,139 @@
+.validation-module {
+  width: 100%;
+}
+
+.validation-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+.filter-group label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.validation-table-container {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  overflow: auto;
+  margin-bottom: 24px;
+}
+
+.validation-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.validation-table th,
+.validation-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.validation-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: var(--text-primary);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.validation-table tr:last-child td {
+  border-bottom: none;
+}
+
+.validation-table tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge.pending {
+  background-color: rgba(237, 108, 2, 0.1);
+  color: var(--warning-color);
+}
+
+.status-badge.approved {
+  background-color: rgba(46, 125, 50, 0.1);
+  color: var(--success-color);
+}
+
+.status-badge.rejected {
+  background-color: rgba(211, 47, 47, 0.1);
+  color: var(--danger-color);
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.validation-form {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+}
+
+.validation-form h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.validation-form-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.validation-form .form-group {
+  margin-bottom: 0;
+}
+
+.validation-form .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+@media (max-width: 992px) {
+  .validation-table-container {
+    overflow-x: auto;
+  }
+  
+  .validation-table {
+    min-width: 900px;
+  }
+}
