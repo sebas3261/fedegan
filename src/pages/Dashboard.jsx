@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
 import "./Dashboard.css";
 
@@ -11,9 +20,20 @@ function Dashboard() {
   useEffect(() => {
     async function fetchAnimales() {
       try {
-        const response = await fetch("https://fedegan-backend.onrender.com/animales");
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+          "https://fedegan-backend.onrender.com/animales",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         const data = await response.json();
-        setAnimales(data);
+        setAnimales(data || []);
       } catch (error) {
         console.error("Error al obtener los animales:", error);
       } finally {
@@ -26,39 +46,42 @@ function Dashboard() {
 
   // Datos de resumen
   const total = animales.length;
-  const vacunados = animales.filter((a) => a.vacunado).length;
+  const vacunados = animales.filter((a) => a?.vacunado).length;
   const noVacunados = total - vacunados;
   const cobertura = total > 0 ? Math.round((vacunados / total) * 100) : 0;
 
-  // Ejemplo de datos para gráfico de vacunación por finca
+  // Datos agrupados por finca
   const vacunacionPorFinca = animales.reduce((acc, animal) => {
+    if (!animal || typeof animal !== "object") return acc;
+
     const finca = animal.finca || "Sin Finca";
+    const vacunado = animal.vacunado ?? false;
+
     const existente = acc.find((f) => f.name === finca);
     if (existente) {
-      existente.vacunados += animal.vacunado ? 1 : 0;
+      existente.vacunados += vacunado ? 1 : 0;
       existente.total += 1;
     } else {
       acc.push({
         name: finca,
-        vacunados: animal.vacunado ? 1 : 0,
+        vacunados: vacunado ? 1 : 0,
         total: 1,
       });
     }
     return acc;
   }, []);
 
-  // Prepara datos para gráfico barras: porcentaje vacunados por finca
+  // Preparar datos para gráfico de barras
   const dataBarChart = vacunacionPorFinca.map((f) => ({
     name: f.name,
     porcentaje: Math.round((f.vacunados / f.total) * 100),
   }));
 
-  // Datos para gráfico circular (Pie)
+  // Datos para gráfico circular
   const pieData = [
     { name: "Vacunados", value: vacunados, color: "#4caf50" },
     { name: "No vacunados", value: noVacunados, color: "#f44336" },
   ];
-
   const COLORS = pieData.map((d) => d.color);
 
   return (
@@ -120,11 +143,24 @@ function Dashboard() {
             {/* Bar chart */}
             <div style={{ width: "100%", height: 250 }}>
               <ResponsiveContainer>
-                <BarChart data={dataBarChart} margin={{ top: 5, right: 30, left: 20, bottom: 40 }}>
-                  <XAxis dataKey="name" angle={-45} textAnchor="end" interval={0} height={60} />
+                <BarChart
+                  data={dataBarChart}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 40 }}
+                >
+                  <XAxis
+                    dataKey="name"
+                    angle={-45}
+                    textAnchor="end"
+                    interval={0}
+                    height={60}
+                  />
                   <YAxis domain={[0, 100]} tickFormatter={(val) => `${val}%`} />
                   <Tooltip formatter={(value) => `${value}%`} />
-                  <Bar dataKey="porcentaje" fill="#3f51b5" radius={[6, 6, 0, 0]} />
+                  <Bar
+                    dataKey="porcentaje"
+                    fill="#3f51b5"
+                    radius={[6, 6, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -132,7 +168,10 @@ function Dashboard() {
         </div>
 
         {/* Listado de animales */}
-        <div className="dashboard-card animals" style={{ gridColumn: "1 / -1" }}>
+        <div
+          className="dashboard-card animals"
+          style={{ gridColumn: "1 / -1" }}
+        >
           <h2>Listado de Animales</h2>
           <div className="card-content">
             {cargando ? (
@@ -151,8 +190,8 @@ function Dashboard() {
                 <tbody>
                   {animales.map((a) => (
                     <tr key={a._id}>
-                      <td>{a.nombre}</td>
-                      <td>{a.finca}</td>
+                      <td>{a.nombre || "Sin Nombre"}</td>
+                      <td>{a.finca || "Sin Finca"}</td>
                       <td>{a.vacunado ? "✅ Sí" : "❌ No"}</td>
                     </tr>
                   ))}
