@@ -72,7 +72,7 @@ function VaccinationForm() {
       <form className="vaccination-form" onSubmit={handleSubmit}>
         <div className="form-grid">
           <div className="form-group">
-            <label htmlFor="animalId">ID del Animal *</label>
+            <label htmlFor="animalId">Nombre del Animal *</label>
             <input
               type="text"
               id="animalId"
