@@ -37,17 +37,25 @@ function VaccinationForm() {
       nombre: formData.animalId,
       finca: formData.farm,
       vacunado: formData.vacunado,
+      ubicacion: formData.location,
+      fecha: formData.date,
+      tipo_vacuna: formData.vaccineType,
+      lote_vacuna: formData.vaccineBatch,
+      observaciones: formData.observations,
     };
 
     try {
-      const response = await fetch("https://fedegan-backend.onrender.com/animales", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(animalData),
-      });
+      const response = await fetch(
+        "https://fedegan-backend.onrender.com/animales",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(animalData),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -180,8 +188,12 @@ function VaccinationForm() {
         </div>
 
         <div className="form-actions">
-          <button type="button" className="btn btn-secondary">Cancelar</button>
-          <button type="submit" className="btn btn-primary">Guardar Registro</button>
+          <button type="button" className="btn btn-secondary">
+            Cancelar
+          </button>
+          <button type="submit" className="btn btn-primary">
+            Guardar Registro
+          </button>
         </div>
       </form>
     </div>
